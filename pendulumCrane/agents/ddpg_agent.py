@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+import pendulumCrane
 import gym
 from gym import wrappers, logger
 from sklearn.gaussian_process.kernels import WhiteKernel
@@ -25,8 +26,8 @@ class ddpgAgent(object):
         self.action_space = action_space
         learning_rate = 0.001
 
-        self.load = 1
-        self.save = 1
+        self.load = 0
+        self.save = 0
         self.training = 0
         
         self.state_size = 5
