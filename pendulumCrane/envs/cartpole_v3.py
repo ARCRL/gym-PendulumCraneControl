@@ -129,8 +129,6 @@ class CartPoleEnv_Crane2(gym.Env):
         self.goal_x = -0.20
 
         self.time = 0
-        self.log_f = open('/home/casper/Documents/save_DL/log.txt', 'w')
-        self.log_f.write('time, x, theta, action, goal, reward\n')
 
         # Angle limit set to 2 * theta_threshold_radians so failing observation is still within bounds
         high = np.array([
@@ -186,10 +184,6 @@ class CartPoleEnv_Crane2(gym.Env):
 
     def get_reward(self):
         return self.reward
-
-    def log(self):
-        i_a, omega_m, x, omega_p, theta_p, goal = self.state
-        self.log_f.write('{:.4}, {:.4}, {:.4}, {:.4}, {:.4}, {:4}\n'.format(float(self.time), float(x), float(theta_p), float(self.action), float(goal), float(self.reward)))
 
     def step(self, action):
         assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
@@ -269,9 +263,6 @@ class CartPoleEnv_Crane2(gym.Env):
         self.time = 0
 
         self.set_goal()
-        self.log_f.close()
-        self.log_f = open('/home/casper/Documents/save_DL/' + f, 'w')
-        self.log_f.write('time, x, theta, action, goal, reward\n')
 
         out_state = (self.state[2], self.state[1], self.state[4], self.state[3], self.state[5])
         #out_state = (self.state[2], self.state[4], self.state[5])

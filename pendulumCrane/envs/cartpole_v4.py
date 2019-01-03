@@ -129,8 +129,6 @@ class CartPoleEnv_Crane3(gym.Env):
         self.goal_x = -0.20
 
         self.time = 0
-        self.log_f = open('/home/casper/Documents/save_DL/log.txt', 'w')
-        self.log_f.write('time, x, theta, action, goal, reward\n')
 
         # Angle limit set to 2 * theta_threshold_radians so failing observation is still within bounds
         high = np.array([
@@ -214,32 +212,8 @@ class CartPoleEnv_Crane3(gym.Env):
         self.reward = reward
         return reward
 
-    """
-    def reward_calc(self, state, next_state):
-        
-        bs_reward = np.exp(-self.mul**2*((state[0]+math.sin(state[2])*0.7 - state[-1])**2 + (state[0] - state[-1])**2))#+ ((math.cos(self.state[4])*0.7-0.7)/0.2)**2))
-        as_reward = np.exp(-self.mul**2*((next_state[0]+math.sin(next_state[2])*0.7 - next_state[-1])**2 + (next_state[0] - next_state[-1])**2))
-
-        #bs_reward = np.exp(-self.mul**2*((state[0] - state[-1])**2))
-        #as_reward = np.exp(-self.mul**2*((next_state[0] - next_state[-1])**2))
-
-        diff = as_reward - bs_reward
-
-        if (diff <= 0):
-            reward = -as_reward #* abs(theta_p)#* 1/self.time
-        else:
-            reward = as_reward
-
-        self.reward = reward
-        return reward
-    """
-
     def get_reward(self):
         return self.reward
-
-    def log(self):
-        i_a, omega_m, x, omega_p, theta_p, goal = self.state
-        self.log_f.write('{:.4}, {:.4}, {:.4}, {:.4}, {:.4}, {:4}\n'.format(float(self.time), float(x), float(theta_p), float(self.action), float(goal), float(self.reward)))
 
     def step(self, action):
         assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
@@ -322,9 +296,6 @@ class CartPoleEnv_Crane3(gym.Env):
         self.time = 0
 
         self.set_goal()
-        self.log_f.close()
-        self.log_f = open('/home/casper/Documents/save_DL/' + f, 'w')
-        self.log_f.write('time, x, theta, action, goal, reward\n')
 
         out_state = (self.state[2], self.state[4], self.state[5])
         #out_state = (self.state[2], self.state[4], self.state[5])

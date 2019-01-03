@@ -10,9 +10,10 @@ DQN and DDPG was tested againts the LQR and two very simple baseline agents whic
 As expected the DDPG, which is a continuous agent, outperforms the DQN, which is a discrete agent limited +/- [0, 0.1, 0.2, 1.0, 2.0, 5.0, 7.0, 9.0] V outputs, and both simple agents. The LQR however was still best.
 
 # Showcase
-The jupyter notebook "showcase.ipynb" displays some of the results which were obtained during the project.
+Two notebooks has been created to showcase the results obtained during the project; one for DQN and one for DDPG.
 
 # Installation
+The installation requires a functioning version of OpenAI gym and PyTorch.
 ```bash
 cd gym-PendulumCraneControl
 pip install -e .
