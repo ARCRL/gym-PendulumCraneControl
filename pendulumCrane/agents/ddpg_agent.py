@@ -330,26 +330,26 @@ class critic(nn.Module):
         self.load_state_dict(params)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=None)
-    parser.add_argument('env_id', nargs='?', default='CartPoleCraneTrain-v2', help='Select the environment to run')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description=None)
+    # parser.add_argument('env_id', nargs='?', default='CartPoleCraneTrain-v2', help='Select the environment to run')
+    # args = parser.parse_args()
 
-    # You can set the level to logger.DEBUG or logger.WARN if you
-    # want to change the amount of output.
-    logger.set_level(logger.INFO)
+    # # You can set the level to logger.DEBUG or logger.WARN if you
+    # # want to change the amount of output.
+    # logger.set_level(logger.INFO)
 
-    env = gym.make(args.env_id)
-    env.env.set_goal(0)
+    # env = gym.make(args.env_id)
+    # env.env.set_goal(0)
     
-    agent = ddpgAgent(env, env.action_space)
-    agent.train()
-    # You provide the directory to write to (can be an existing
-    # directory, including one with existing data -- all monitor files
-    # will be namespaced). You can also dump to a tempdir if you'd
-    # like: tempfile.mkdtemp().
+    # agent = ddpgAgent(env, env.action_space)
+    # #agent.train()
+    # # You provide the directory to write to (can be an existing
+    # # directory, including one with existing data -- all monitor files
+    # # will be namespaced). You can also dump to a tempdir if you'd
+    # # like: tempfile.mkdtemp().
 
-    # You can set the level to logger.DEBUG or logger.WARN if you
-    # want to change the amount of output.
+    # # You can set the level to logger.DEBUG or logger.WARN if you
+    # # want to change the amount of output.
     logger.set_level(logger.INFO)
 
     parser = argparse.ArgumentParser(description=None)
@@ -359,10 +359,15 @@ if __name__ == '__main__':
 
     env = gym.make(args.env_id)
 
-    outdir = '/tmp/ddpg-agent-results'
-    #env = wrappers.Monitor(env, directory=outdir, force=True)
+    # outdir = '/tmp/ddpg-agent-results'
+    # env = wrappers.Monitor(env, directory=outdir, force=True)
 
-    env.env.mul = 4
+    # env.env.mul = 4
+    # env.seed(1234)
+
+    #env = gym.make('CartPoleCrane-v2')
+    agent = ddpgAgent(env, env.action_space)
+    env = wrappers.Monitor(env, directory='/tmp/ddpgAgent', video_callable=None, force=True, write_upon_reset = False)
     env.seed(1234)
 
     episode_count = 10#2097865
@@ -371,11 +376,11 @@ if __name__ == '__main__':
 
     for i in range(episode_count):
         ob = env.reset()
-        ob = env.env.reset('ddpg_' + str(i) +'.txt')
+        #ob = env.env.reset('ddpg_' + str(i) +'.txt')
         #env.env.env.state[2] = 0.05
         #env.env.env.set_goal(0.8)
         #while True:
-        env.env.log()
+        #env.env.log()
         print(ob[0], ob[-1])
         for j in range(1500):
             action = agent.act(ob, reward, done)
@@ -383,7 +388,7 @@ if __name__ == '__main__':
             #action = -10.0
             ob, reward, done, _ = env.step(action)
             ob = ob[0]
-            env.env.log()
+            #env.env.log()
             if done:
                 break
             # Note there's no env.render() here. But the environment still can open window and

@@ -12,7 +12,7 @@ import numpy as np
 from scipy import signal
 from gym.envs.classic_control import rendering
 
-class CartPoleEnv_Crane2(gym.Env):
+class CartPoleEnv_Crane3(gym.Env):
     """
     Description:
         A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The pendulum starts upright, and the goal is to prevent it from falling over by increasing and reducing the cart's velocity.
@@ -245,13 +245,13 @@ class CartPoleEnv_Crane2(gym.Env):
 
         self.time += self.tau
         
-        out_state = (x, x_v, theta_p, omega_p, self.goal_x)
+        out_state = (x, theta_p, self.goal_x)
         #out_state = (x, theta_p, self.goal_x)
 
         self.reward = self.reward_calc(init_state, out_state)
         reward = self.reward
 
-        return [np.array(out_state), self.state], reward, done, {}
+        return np.array(out_state), reward, done, {}
 
 
     def reset(self, f='log.txt'):
@@ -273,7 +273,7 @@ class CartPoleEnv_Crane2(gym.Env):
         self.log_f = open('/home/casper/Documents/save_DL/' + f, 'w')
         self.log_f.write('time, x, theta, action, goal, reward\n')
 
-        out_state = (self.state[2], self.state[1], self.state[4], self.state[3], self.state[5])
+        out_state = (self.state[2], self.state[4], self.state[5])
         #out_state = (self.state[2], self.state[4], self.state[5])
         return np.array(out_state)
 
