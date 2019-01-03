@@ -607,6 +607,9 @@ for _ in range(400):
 	numpy_action = D2C(action) # Discrete action as a numpy variable
 	next_state, reward, done, _ = env.step(numpy_action)
 
+	if done:
+		break
+
 	s = next_state
 
 # Close the env and write monitor result info to disk

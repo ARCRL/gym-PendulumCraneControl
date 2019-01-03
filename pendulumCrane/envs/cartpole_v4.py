@@ -166,6 +166,55 @@ class CartPoleEnv_Crane3(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
+
+    def reward_calc(self, action, next_state, old_state):
+
+        # Calculate distance 
+        x_goal = next_state[2]
+        x_pos = next_state[0]
+        distance = x_pos - x_goal
+
+        x_goal_old = old_state[2]
+        x_pos_old = old_state[0]
+        old_distance = x_pos_old - x_goal_old
+
+        # Calculate end effector position of pendulum
+        theta = next_state[1]
+
+        pen_length = 0.7 # Length of pendulum - Placeholder
+        theta_pos = x_pos + math.sin(theta)*pen_length
+
+        # Use distance of end effector instead of sledge
+        distance_pendulum = theta_pos - x_goal
+
+        dist_dif = distance**2 - old_distance**2
+        #dist_dif = 
+        #print("AR: ", distance, " ", old_distance) 
+        reward = 0
+        reward_type = 0
+        # Base reward:
+        if dist_dif > 0:
+            reward = -1
+        elif dist_dif == 0:
+            reward = 1
+        elif dist_dif < 0:
+            reward = 1
+
+
+        # Distance bonus
+        dist_bonus = 2 - abs(distance)*10
+        reward = reward + dist_bonus
+
+        # Theta_pos penalty
+        theta_p = next_state[1]
+        theta_p = (x_pos+math.sin(theta_p)*0.7)-x_pos
+        theta_penalty = abs(theta_p)*2
+
+        reward = reward - theta_penalty
+        self.reward = reward
+        return reward
+
+    """
     def reward_calc(self, state, next_state):
         
         bs_reward = np.exp(-self.mul**2*((state[0]+math.sin(state[2])*0.7 - state[-1])**2 + (state[0] - state[-1])**2))#+ ((math.cos(self.state[4])*0.7-0.7)/0.2)**2))
@@ -183,6 +232,7 @@ class CartPoleEnv_Crane3(gym.Env):
 
         self.reward = reward
         return reward
+    """
 
     def get_reward(self):
         return self.reward
@@ -206,6 +256,8 @@ class CartPoleEnv_Crane3(gym.Env):
         V_a = action
         #if (abs(action) < 2):
         #    V_a = 0
+
+        old_state = (x, theta_p, self.goal_x)
 
         xk = np.matmul(self.system.A, np.array([i_a, omega_m, x, omega_p, theta_p])) + self.system.B.T * V_a
         xk = xk[0]
@@ -246,9 +298,10 @@ class CartPoleEnv_Crane3(gym.Env):
         self.time += self.tau
         
         out_state = (x, theta_p, self.goal_x)
+        new_state = out_state
         #out_state = (x, theta_p, self.goal_x)
 
-        self.reward = self.reward_calc(init_state, out_state)
+        self.reward = self.reward_calc(action, new_state, old_state)
         reward = self.reward
 
         return np.array(out_state), reward, done, {}
