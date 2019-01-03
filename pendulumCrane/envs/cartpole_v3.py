@@ -380,7 +380,6 @@ class CartPoleEnv_Crane2(gym.Env):
 
 
     def close(self):
-        self.log_f.close()
         if self.viewer:
             self.viewer.close()
             self.viewer = None
